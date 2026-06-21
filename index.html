@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>헐크쌤 최지유 | 부산 화명동 돌핀어린이수영장</title>
+<style>
+  /* ===== 기본 설정 ===== */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --deep: #013a63;
+    --ocean: #0277bd;
+    --sea: #039be5;
+    --aqua: #4fc3f7;
+    --light: #b3e5fc;
+    --foam: #e1f5fe;
+    --sun: #ffd54f;
+    --coral: #ff7043;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
+    color: #08344f;
+    background: linear-gradient(180deg, #014f86 0%, #0277bd 35%, #039be5 70%, #4fc3f7 100%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* ===== 물속 빛 일렁임 ===== */
+  .water-light {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 45%),
+      radial-gradient(circle at 75% 20%, rgba(255,255,255,0.18), transparent 40%),
+      radial-gradient(circle at 50% 60%, rgba(255,255,255,0.12), transparent 50%);
+    animation: shimmer 9s ease-in-out infinite alternate;
+  }
+  @keyframes shimmer {
+    0%   { opacity: .55; transform: translateY(0) scale(1); }
+    100% { opacity: 1;   transform: translateY(-25px) scale(1.08); }
+  }
+
+  /* ===== 물방울 ===== */
+  .bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+  .bubble {
+    position: absolute;
+    bottom: -60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.15));
+    box-shadow: 0 0 8px rgba(255,255,255,0.4);
+    animation: rise linear infinite;
+  }
+  @keyframes rise {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    10%  { opacity: .8; }
+    50%  { transform: translateY(-55vh) translateX(20px); }
+    100% { transform: translateY(-110vh) translateX(-15px); opacity: 0; }
+  }
+
+  /* ===== 헤엄치는 해양생물 ===== */
+  .swimmers { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+  .swimmer {
+    position: absolute;
+    font-size: 42px;
+    opacity: .85;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+    animation-name: swim, bob;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    animation-direction: normal, alternate;
+  }
+  @keyframes swim {
+    from { transform: translateX(-15vw); }
+    to   { transform: translateX(120vw); }
+  }
+  @keyframes swim-reverse {
+    from { transform: translateX(120vw) scaleX(-1); }
+    to   { transform: translateX(-15vw) scaleX(-1); }
+  }
+  @keyframes bob {
+    from { margin-top: -14px; }
+    to   { margin-top: 14px; }
+  }
+
+  /* ===== 콘텐츠 공통 ===== */
+  .content { position: relative; z-index: 2; }
+  section { padding: 80px 22px; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  .panel {
+    background: rgba(255,255,255,0.92);
+    border-radius: 26px;
+    padding: 46px 38px;
+    box-shadow: 0 18px 50px rgba(1,42,73,0.28);
+    backdrop-filter: blur(4px);
+  }
+  h2.title {
+    font-size: clamp(24px, 4vw, 34px);
+    color: var(--deep);
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 800;
+  }
+  .subtitle { text-align: center; color: var(--ocean); margin-bottom: 36px; font-size: 16px; }
+
+  /* ===== 1. 첫 화면(히어로) ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 22px 90px;
+  }
+  .hero .badge-loc {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.2);
+    border: 1.5px solid rgba(255,255,255,0.6);
+    color: #fff;
+    padding: 9px 20px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 28px;
+    backdrop-filter: blur(3px);
+  }
+  .hero h1 {
+    color: #fff;
+    font-size: clamp(40px, 9vw, 78px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    text-shadow: 0 6px 22px rgba(1,30,55,0.45);
+    line-height: 1.15;
+  }
+  .hero h1 .nick {
+    display: block;
+    font-size: clamp(20px, 4vw, 30px);
+    color: var(--sun);
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: 2px;
+  }
+  .hero p.lead {
+    color: var(--foam);
+    font-size: clamp(16px, 2.5vw, 21px);
+    margin-top: 22px;
+    max-width: 620px;
+    font-weight: 500;
+  }
+  .hero .scroll-cue {
+    margin-top: 54px;
+    color: #fff;
+    font-size: 14px;
+    opacity: .9;
+    animation: bobcue 1.6s ease-in-out infinite;
+  }
+  @keyframes bobcue { 0%,100%{transform:translateY(0)} 50%{transform:translateY(10px)} }
+  .hero-creatures { font-size: 50px; margin-top: 30px; letter-spacing: 14px; }
+  .hero-creatures span { display: inline-block; animation: bob 2.4s ease-in-out infinite alternate; }
+  .hero-creatures span:nth-child(2){ animation-delay:.4s; }
+  .hero-creatures span:nth-child(3){ animation-delay:.8s; }
+  .hero-creatures span:nth-child(4){ animation-delay:1.2s; }
+
+  /* ===== 2. 선생님 소개 ===== */
+  .intro-grid { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: center; }
+  @media(min-width: 760px){ .intro-grid { grid-template-columns: 0.9fr 1.1fr; } }
+  .avatar {
+    font-size: 120px;
+    text-align: center;
+    background: linear-gradient(160deg, var(--light), var(--aqua));
+    border-radius: 24px;
+    padding: 40px 20px;
+  }
+  .cert-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #013a63, #0277bd);
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(1,42,73,0.35);
+    margin-top: 18px;
+    border: 2px solid var(--sun);
+  }
+  .cert-badge .medal { font-size: 38px; }
+  .cert-badge b { font-size: 19px; display:block; }
+  .cert-badge small { color: var(--light); }
+  .nick-tag {
+    display: inline-block;
+    background: var(--sun);
+    color: var(--deep);
+    font-weight: 800;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  /* ===== 3. 하는 일 카드 ===== */
+  .cards { display: grid; gap: 22px; grid-template-columns: 1fr; }
+  @media(min-width: 760px){ .cards { grid-template-columns: repeat(3,1fr); } }
+  .card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 34px 26px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(1,42,73,0.18);
+    transition: transform .25s, box-shadow .25s;
+    border-top: 5px solid var(--sea);
+  }
+  .card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(1,42,73,0.28); }
+  .card .icon { font-size: 54px; margin-bottom: 14px; }
+  .card h3 { color: var(--deep); font-size: 21px; margin-bottom: 10px; }
+  .card p { color: #355c73; font-size: 15px; }
+  .card .tag {
+    display:inline-block; margin-top:14px; background:var(--foam);
+    color:var(--ocean); padding:4px 14px; border-radius:999px; font-size:13px; font-weight:700;
+  }
+
+  /* ===== 4. 생존수영 ===== */
+  .survival .panel { background: linear-gradient(160deg, rgba(255,255,255,0.96), rgba(225,245,254,0.96)); }
+  .philosophy {
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 800;
+    text-align: center;
+    color: var(--deep);
+    line-height: 1.5;
+    margin: 10px 0 30px;
+  }
+  .philosophy .hl {
+    background: linear-gradient(transparent 60%, var(--sun) 60%);
+    padding: 0 4px;
+  }
+  .survival-desc { text-align:center; color:#2c5067; font-size:17px; max-width:760px; margin:0 auto 36px; }
+  .points { display:grid; gap:16px; grid-template-columns:1fr; }
+  @media(min-width:680px){ .points { grid-template-columns:1fr 1fr; } }
+  .point {
+    display:flex; gap:14px; align-items:flex-start;
+    background:#fff; border-radius:16px; padding:20px 22px;
+    box-shadow:0 6px 18px rgba(1,42,73,0.12);
+  }
+  .point .check { font-size:26px; flex-shrink:0; }
+  .point b { color:var(--deep); display:block; font-size:17px; margin-bottom:2px; }
+  .point span { color:#4a6f85; font-size:14.5px; }
+
+  /* ===== 5. 운행 지역 ===== */
+  .regions { display:flex; flex-wrap:wrap; justify-content:center; gap:22px; }
+  .region {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 30px 38px;
+    text-align:center;
+    min-width: 200px;
+    box-shadow: 0 12px 30px rgba(1,42,73,0.18);
+    transition: transform .25s;
+  }
+  .region:hover { transform: translateY(-6px); }
+  .region .pin { font-size: 50px; }
+  .region b { display:block; color:var(--deep); font-size:23px; margin-top:8px; }
+  .region small { color: var(--ocean); font-size:14px; }
+  .route-line {
+    text-align:center; color:#fff; font-size:18px; font-weight:700;
+    margin-top:30px; letter-spacing:2px; text-shadow:0 2px 8px rgba(1,30,55,.4);
+  }
+
+  /* ===== 6. 리뷰 ===== */
+  .reviews { display:grid; gap:22px; grid-template-columns:1fr; }
+  @media(min-width:760px){ .reviews { grid-template-columns:1fr 1fr; } }
+  .review {
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    padding: 26px 28px;
+    box-shadow: 0 10px 26px rgba(1,42,73,0.16);
+    position: relative;
+  }
+  .review .stars { color: var(--sun); font-size:18px; letter-spacing:2px; }
+  .review p { color:#355c73; font-size:15.5px; margin:12px 0 16px; }
+  .review .who { color:var(--ocean); font-weight:700; font-size:14px; }
+  .review .quote { position:absolute; top:14px; right:22px; font-size:50px; color:var(--light); font-family:Georgia,serif; line-height:1; }
+
+  /* ===== 7. 푸터 / 연락처 ===== */
+  footer { background: rgba(1,42,73,0.92); color:#fff; padding: 70px 22px 50px; position:relative; z-index:2; }
+  .footer-wrap { max-width: 780px; margin:0 auto; text-align:center; }
+  footer h2 { font-size: clamp(24px,4vw,32px); margin-bottom: 14px; }
+  footer .info { display:flex; flex-wrap:wrap; justify-content:center; gap:14px 34px; margin:26px 0 34px; }
+  footer .info div { font-size:16px; }
+  footer .info .label { color: var(--aqua); display:block; font-size:13px; margin-bottom:2px; }
+  .cta {
+    display:inline-block;
+    background: linear-gradient(135deg, var(--sun), var(--coral));
+    color:#fff;
+    font-size: 21px;
+    font-weight: 800;
+    padding: 20px 56px;
+    border-radius: 999px;
+    text-decoration:none;
+    box-shadow: 0 12px 30px rgba(255,112,67,0.45);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .cta:hover { transform: translateY(-4px) scale(1.03); box-shadow:0 18px 40px rgba(255,112,67,0.55); }
+  footer .copy { margin-top: 40px; color:#7fb3d5; font-size:13px; }
+
+  /* ===== 선생님 증명사진 ===== */
+  .photo {
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 24px;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 12px 30px rgba(1,42,73,0.3);
+    border: 4px solid #fff;
+  }
+
+  /* ===== 오른쪽 하단 로고 ===== */
+  .floating-logos {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.82);
+    padding: 10px 14px;
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(1,42,73,0.25);
+    backdrop-filter: blur(3px);
+  }
+  .floating-logos img {
+    height: 56px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+  @media(max-width: 520px){
+    .floating-logos img { height: 42px; }
+    .floating-logos { padding: 8px 10px; gap: 8px; }
+  }
+
+  /* ===== 수영장 환경 / 특별한 점 ===== */
+  .merits { display:grid; gap:22px; grid-template-columns:1fr; }
+  @media(min-width:760px){ .merits { grid-template-columns: repeat(3,1fr); } }
+  .merit {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(1,42,73,0.18);
+    border-top: 5px solid var(--aqua);
+  }
+  .merit .icon { font-size: 50px; margin-bottom: 12px; }
+  .merit h3 { color: var(--deep); font-size: 20px; margin-bottom: 8px; }
+  .merit p { color:#355c73; font-size: 15px; }
+  .merit .big { color: var(--coral); font-weight: 800; }
+
+  /* ===== 히어로 버튼 ===== */
+  .hero-btns { margin-top: 34px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+  .hero-btns a { padding:15px 32px; border-radius:999px; font-weight:800; font-size:17px; text-decoration:none; transition: transform .2s, box-shadow .2s; }
+  .hero-btns .primary { background: linear-gradient(135deg, var(--sun), var(--coral)); color:#fff; box-shadow:0 10px 26px rgba(255,112,67,0.5); }
+  .hero-btns .ghost { background: rgba(255,255,255,0.15); color:#fff; border:1.5px solid rgba(255,255,255,0.65); backdrop-filter: blur(3px); }
+  .hero-btns a:hover { transform: translateY(-3px); }
+
+  /* ===== 신뢰 숫자 배지 ===== */
+  .stats { display:grid; gap:16px; grid-template-columns: repeat(2,1fr); }
+  @media(min-width:760px){ .stats { grid-template-columns: repeat(4,1fr); } }
+  .stat {
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    padding: 28px 14px;
+    text-align:center;
+    box-shadow: 0 12px 30px rgba(1,42,73,0.18);
+    border-bottom: 4px solid var(--sea);
+  }
+  .stat .num { font-size: clamp(28px,5vw,40px); font-weight:900; color:var(--ocean); line-height:1.1; }
+  .stat .num small { font-size:18px; color:var(--coral); font-weight:900; }
+  .stat .lbl { color:#355c73; font-size:14px; margin-top:8px; font-weight:600; }
+
+  /* ===== 갤러리 ===== */
+  .gallery { display:grid; gap:12px; grid-template-columns: repeat(2,1fr); }
+  @media(min-width:680px){ .gallery { grid-template-columns: repeat(3,1fr); } }
+  .gallery img {
+    width:100%; aspect-ratio: 4/3; object-fit: cover;
+    border-radius:14px; cursor:pointer; display:block;
+    box-shadow: 0 8px 20px rgba(1,42,73,0.18);
+    transition: transform .2s;
+  }
+  .gallery img:hover { transform: scale(1.04); }
+  .gallery.portrait { grid-template-columns: repeat(2,1fr); }
+  @media(min-width:680px){ .gallery.portrait { grid-template-columns: repeat(4,1fr); } }
+  .gallery.portrait img { aspect-ratio: 3/4; }
+  .gallery-label { color:var(--foam); font-size:16px; font-weight:700; text-align:center; margin:34px 0 14px; }
+
+  /* ===== 리뷰 캡처 이미지 ===== */
+  .review-shots { display:grid; gap:18px; grid-template-columns: 1fr; align-items:start; max-width:860px; margin:0 auto; }
+  @media(min-width:760px){ .review-shots { grid-template-columns: repeat(2,1fr); } }
+  .review-shots img {
+    width:100%; border-radius:16px; cursor:pointer; display:block;
+    box-shadow:0 10px 26px rgba(1,42,73,0.22);
+    transition: transform .2s; background:#fff;
+  }
+  .review-shots img:hover { transform: translateY(-6px); }
+
+  /* ===== 무료체험 오퍼 ===== */
+  .offer .panel { text-align:center; background: linear-gradient(160deg, #013a63, #0277bd); color:#fff; }
+  .offer .ribbon {
+    display:inline-block; background:var(--sun); color:var(--deep);
+    font-weight:800; padding:7px 22px; border-radius:999px; font-size:15px; margin-bottom:16px;
+  }
+  .offer h2 { color:#fff; font-size:clamp(26px,5vw,40px); font-weight:900; margin-bottom:14px; line-height:1.35; }
+  .offer h2 .hl { color:var(--sun); }
+  .offer p { color:var(--light); font-size:17px; max-width:640px; margin:0 auto 10px; }
+  .offer .how {
+    background: rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.3);
+    border-radius:16px; padding:20px 24px; max-width:540px; margin:24px auto 30px; font-size:16px; line-height:1.8;
+  }
+  .offer .how b { color:var(--sun); font-size:20px; }
+
+  /* ===== 상담 버튼 / 카카오 / 지도 ===== */
+  .contact-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:14px; margin: 6px 0 30px; }
+  .btn-contact {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:18px; font-weight:800; padding:16px 32px; border-radius:999px;
+    text-decoration:none; transition: transform .2s, box-shadow .2s;
+  }
+  .btn-call  { background: linear-gradient(135deg, var(--sun), var(--coral)); color:#fff; box-shadow:0 10px 26px rgba(255,112,67,0.45); }
+  .btn-kakao { background:#FEE500; color:#3c1e1e; box-shadow:0 10px 26px rgba(0,0,0,0.25); }
+  .btn-contact:hover { transform: translateY(-4px); }
+  .kakao-qr {
+    display:inline-block; background:#fff; border-radius:18px; padding:16px 16px 12px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.3); margin-top:6px;
+  }
+  .kakao-qr img { width:200px; max-width:60vw; height:auto; border-radius:10px; display:block; }
+  .kakao-qr .id { color:#3c1e1e; font-weight:700; margin-top:10px; font-size:15px; }
+  .kakao-qr .id span { color:#0277bd; }
+  .map-wrap { margin:30px auto 0; max-width:680px; border-radius:18px; overflow:hidden; box-shadow:0 12px 30px rgba(0,0,0,0.35); }
+  .map-wrap iframe { width:100%; height:300px; border:0; display:block; }
+  .map-link {
+    display:inline-block; margin-top:16px; background:#03c75a; color:#fff;
+    font-weight:700; padding:13px 26px; border-radius:999px; text-decoration:none; font-size:15px;
+    transition: transform .2s;
+  }
+  .map-link:hover { transform: translateY(-3px); }
+
+  /* ===== 떠다니는 상담 버튼 ===== */
+  .float-consult {
+    position: fixed; left:16px; bottom:16px; z-index:6;
+    display:inline-flex; align-items:center; gap:6px;
+    background: linear-gradient(135deg, var(--sun), var(--coral));
+    color:#fff; font-weight:800; font-size:16px;
+    padding:14px 22px; border-radius:999px; text-decoration:none;
+    box-shadow:0 10px 26px rgba(255,112,67,0.5);
+    animation: pulse 2s ease-in-out infinite;
+    transition: opacity .3s, visibility .3s;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+  .float-consult:hover { transform: scale(1.08); animation:none; }
+  .float-consult.hide { opacity:0; visibility:hidden; }
+  @media(max-width: 520px){ .float-consult { font-size:14px; padding:12px 18px; } }
+
+  /* ===== 라이트박스 ===== */
+  .lightbox {
+    position: fixed; inset:0; z-index:50; background: rgba(0,0,0,0.9);
+    display:none; align-items:center; justify-content:center; padding:24px; cursor: zoom-out;
+  }
+  .lightbox.open { display:flex; }
+  .lightbox img { max-width:92vw; max-height:90vh; border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,0.6); }
+  .lightbox .close { position:absolute; top:14px; right:24px; color:#fff; font-size:42px; cursor:pointer; line-height:1; }
+
+  /* ===== 헐크쌤 이야기 ===== */
+  .story .panel { background: rgba(255,255,255,0.95); }
+  .story .hook {
+    text-align:center; font-size:clamp(19px,3.2vw,26px); font-weight:800;
+    color:var(--deep); line-height:1.5; margin-bottom:6px;
+  }
+  .story .hook .em { color:var(--ocean); }
+  .story .greet { text-align:center; color:#2c5067; font-size:16px; margin-bottom:8px; }
+  .story .pull {
+    text-align:center; font-size:clamp(21px,3.8vw,30px); font-weight:800; color:var(--coral);
+    margin:24px 0;
+  }
+  .story h3 {
+    color:var(--deep); font-size:20px; margin:34px 0 4px; font-weight:800;
+  }
+  .story h3 .tagline { display:block; font-size:14px; color:var(--ocean); font-weight:600; margin-top:2px; }
+  .story p { color:#34586e; font-size:16px; margin-bottom:14px; line-height:1.9; }
+  .story .highlight-box {
+    background: linear-gradient(160deg, var(--foam), #fff);
+    border-left: 5px solid var(--sea);
+    border-radius: 14px; padding:18px 22px; margin:20px 0;
+    color:var(--deep); font-size:16.5px; font-weight:700; line-height:1.85;
+  }
+
+  /* ===== 연락처 카드 ===== */
+  .contact-cards { display:grid; gap:18px; grid-template-columns:1fr; max-width:640px; margin:6px auto 26px; }
+  @media(min-width:640px){ .contact-cards { grid-template-columns:1fr 1fr; } }
+  .contact-card {
+    background: rgba(255,255,255,0.97); color:#08344f;
+    border-radius:18px; padding:24px 22px; text-align:center;
+    box-shadow:0 10px 26px rgba(0,0,0,0.25);
+  }
+  .contact-card .ico { font-size:38px; }
+  .contact-card .role { font-weight:800; font-size:18px; margin-top:6px; color:var(--deep); }
+  .contact-card .for { font-size:13.5px; color:var(--ocean); font-weight:700; margin:6px 0 12px; }
+  .contact-card .tel {
+    display:inline-block; font-size:20px; font-weight:900; color:#fff; text-decoration:none;
+    background: linear-gradient(135deg, var(--sea), var(--ocean));
+    padding:11px 22px; border-radius:999px;
+  }
+  .contact-card.hulk .tel { background: linear-gradient(135deg, var(--sun), var(--coral)); }
+  .contact-note {
+    text-align:center; color:#fff; font-size:15px; font-weight:700;
+    background: rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.3);
+    border-radius:12px; padding:12px 18px; max-width:560px; margin:0 auto 28px;
+  }
+  .contact-note .pt { color:var(--sun); }
+
+  /* 등장 애니메이션 */
+  .reveal { opacity:0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.show { opacity:1; transform:none; }
+</style>
+</head>
+<body>
+
+  <!-- 배경 효과 -->
+  <div class="water-light"></div>
+  <div class="bubbles" id="bubbles"></div>
+  <div class="swimmers" id="swimmers"></div>
+
+  <!-- 오른쪽 하단 로고 -->
+  <div class="floating-logos">
+    <img src="로고/헐크쌤 png.png" alt="헐크쌤 로고" />
+    <img src="로고/돌핀 png.png" alt="돌핀어린이수영장 로고" />
+  </div>
+
+  <!-- 떠다니는 상담 버튼 -->
+  <a href="#contact" class="float-consult" id="floatConsult">💬 상담 문의</a>
+
+  <div class="content">
+
+    <!-- 1. 첫 화면 -->
+    <section class="hero">
+      <span class="badge-loc">📍 부산 화명동 · 돌핀어린이수영장</span>
+      <h1>
+        <span class="nick">💪 헐크쌤</span>
+        최지유
+      </h1>
+      <p class="lead">아이들이 물을 무서워하지 않고, 스스로를 지킬 수 있도록.<br />물을 이해하고 즐기게 하는 어린이 수영 선생님입니다.</p>
+      <div class="hero-btns">
+        <a href="#offer" class="primary">🎁 1회 무료체험 신청</a>
+        <a href="#contact" class="ghost">상담 문의하기</a>
+      </div>
+      <div class="hero-creatures">
+        <span>🐢</span><span>🐠</span><span>🐡</span><span>🐬</span>
+      </div>
+      <div class="scroll-cue">아래로 스크롤 ⌄</div>
+    </section>
+
+    <!-- 1-2. 신뢰 숫자 배지 -->
+    <section style="padding-top:50px; padding-bottom:50px;">
+      <div class="wrap reveal">
+        <div class="stats">
+          <div class="stat"><div class="num">6<small>년</small></div><div class="lbl">지도 경력</div></div>
+          <div class="stat"><div class="num">1,000<small>명+</small></div><div class="lbl">누적 수강생</div></div>
+          <div class="stat"><div class="num">30<small>곳+</small></div><div class="lbl">생존수영 진행<br />학교·유치원</div></div>
+          <div class="stat"><div class="num">무사고<small> ✓</small></div><div class="lbl">안전 최우선 운영</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 선생님 소개 -->
+    <section>
+      <div class="wrap panel reveal">
+        <h2 class="title">선생님 소개</h2>
+        <p class="subtitle">믿고 맡길 수 있는 자격과 경험</p>
+        <div class="intro-grid">
+          <img class="photo" src="증명사진2.jpg" alt="헐크쌤 최지유 선생님" />
+          <div>
+            <span class="nick-tag">💪 별명 '헐크쌤'</span>
+            <p style="font-size:17px; color:#2c5067; margin-bottom:6px;">
+              든든한 체격과 따뜻한 마음으로 아이들에게 '헐크쌤'이라 불리는
+              <b>최지유</b> 선생님입니다. 안전을 최우선으로, 아이 한 명 한 명의
+              속도에 맞춰 물과 친해지도록 이끕니다.
+            </p>
+            <div class="cert-badge">
+              <span class="medal">🏅</span>
+              <span>
+                <b>수상구조사 1급</b>
+                <small>해양경찰청 발급 자격증</small>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2-2. 헐크쌤 이야기 -->
+    <section class="story">
+      <div class="wrap panel reveal">
+        <h2 class="title">헐크쌤의 한 마디</h2>
+        <p class="subtitle">왜 이 일을 하는지, 어떤 마음으로 가르치는지</p>
+
+        <p class="hook">‘수영’을 통해 <span class="em">더 넓은 세상</span>을 경험하고 즐기게 됐습니다 😄<br />그래서 나누고 싶습니다 🙌</p>
+        <p class="greet">안녕하세요! 돌핀어린이수영장에서 수영을 통해 많은 분들께 즐거움을 드리고 싶은 <b>헐크쌤 최지유</b>입니다 💪</p>
+
+        <p class="pull">“수영… 정말 재미있습니다!!!”</p>
+        <p>제가 정말 좋아하는 수영, 그 매력을 더 많은 분들이 직접 경험하고 느끼실 수 있도록 돕고 싶습니다. 그 마음 하나로 아이들과, 또 어른들과 물에서 만나고 있습니다.</p>
+
+        <h3>수영 강사를 시작하게 된 계기
+          <span class="tagline">어릴 때부터 ‘물 타입’이었던 헐크쌤 💦</span>
+        </h3>
+        <p>어릴 때부터 물을 참 좋아했습니다. 여름이면 어김없이 부모님 손을 잡고 계곡과 바다로 물놀이를 갔고, 수영장에만 가도 마냥 신났던 기억이 납니다. (고향이 포항이라 자연스럽게 물과 더 가까워질 수 있었던 것 같아요 ㅎㅎ)</p>
+        <p>그때까지는 그저 ‘물놀이를 좋아하는 아이’였습니다. 수영을 진지하게 배우기 시작한 건 군 전역 후, <b>해양경찰구조대를 꿈꾸며 훈련을 시작하면서</b>부터였습니다. 그 과정에서 수영을 깊이 있게 배우게 되었고, 자연스럽게 수영 강사라는 길을 걷게 되었습니다.</p>
+
+        <h3>어떤 마음으로 가르치나요
+          <span class="tagline">헐크쌤의 역할</span>
+        </h3>
+        <p>현재 돌핀어린이수영장에서 아이들과 성인 회원님들을 함께 지도하고 있습니다 😁</p>
+        <div class="highlight-box">수업에서 가장 집중하는 건 단순히 ‘수영을 가르치는 것’이 아니라, <b>‘물에 대한 두려움을 풀어주는 과정’</b>입니다.</div>
+        <p>가장 안타까운 순간은 물에 대한 트라우마를 가진 분들을 만날 때입니다. 과거의 경험 때문에 물을 멀리하게 된 경우가 생각보다 정말 많습니다. 그래서 <b>두려움을 가진 분일수록 더 집중</b>하게 됩니다.</p>
+        <p>처음엔 몸에 잔뜩 힘이 들어가 있던 아이들이 조금씩 힘을 내려놓고 물 위에서 편안함을 느끼는 순간 — 그 변화를 함께할 때 가장 큰 보람을 느낍니다 💙</p>
+        <p>서툴고 조심스럽던 아이들이 점점 물과 친해지고, 밝은 표정으로 수영을 즐기는 모습을 보며 저 역시 매일 새로운 힘을 얻습니다. <b>그 변화를 함께하는 일</b>이 제가 이 일을 시작했고, 또 계속하는 이유입니다 🙌</p>
+      </div>
+    </section>
+
+    <!-- 3. 수업 프로그램 -->
+    <section>
+      <div class="wrap reveal">
+        <h2 class="title" style="color:#fff; text-shadow:0 3px 12px rgba(1,30,55,.4)">수업 프로그램</h2>
+        <p class="subtitle" style="color:var(--foam)">목적과 연령에 맞춘 3가지 프로그램</p>
+        <div class="cards">
+          <div class="card">
+            <div class="icon">👨‍👩‍👧‍👦</div>
+            <h3>단체수업 &amp; 개인레슨</h3>
+            <p>단체수업도 <b>최대 1:6</b> 소수 정예!<br />친구들과 함께, 또는 <b>1:1 개인레슨</b>까지.</p>
+            <span class="tag">단체 1:6 · 개인</span>
+          </div>
+          <div class="card">
+            <div class="icon">🛟</div>
+            <h3>생존수영</h3>
+            <p>위급한 순간 스스로를 지키는 힘.<br />물을 이해하고 극복하도록 배워요.</p>
+            <span class="tag">안전 · 생존</span>
+          </div>
+          <div class="card">
+            <div class="icon">🧑‍🤝‍🧑</div>
+            <h3>성인 소그룹</h3>
+            <p>최대 1:6 소수 정예 구성으로<br />프라이빗하게 집중 지도받아요.</p>
+            <span class="tag">1:6 소그룹</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. 생존수영 자세히 -->
+    <section class="survival">
+      <div class="wrap panel reveal">
+        <h2 class="title">생존수영</h2>
+        <p class="philosophy">
+          “윽박지르지 않고<br /><span class="hl">물을 이해하고 극복하는</span> 프로그램”
+        </p>
+        <p class="survival-desc">
+          화명·구포·만덕의 여러 <b>학교와 유치원</b>에서 활발히 진행 중이며,
+          만족도가 높아 <b>아이들이 '또 하고 싶다'</b>고 말하는 수업입니다.
+          무섭게 다그치지 않고, 물과 친해지는 과정부터 차근차근 함께합니다.
+        </p>
+        <div class="points">
+          <div class="point">
+            <span class="check">✅</span>
+            <div><b>겁먹지 않아요</b><span>윽박지르지 않고 물에 대한 두려움부터 천천히 풀어줘요.</span></div>
+          </div>
+          <div class="point">
+            <span class="check">✅</span>
+            <div><b>스스로 지키는 힘</b><span>위급 상황에서 침착하게 대처하는 생존 기술을 배워요.</span></div>
+          </div>
+          <div class="point">
+            <span class="check">✅</span>
+            <div><b>또 하고 싶어해요</b><span>아이들 만족도가 높아 재참여 요청이 많은 인기 수업이에요.</span></div>
+          </div>
+          <div class="point">
+            <span class="check">✅</span>
+            <div><b>현장 경험 풍부</b><span>지역 학교·유치원에서 다년간 진행해 온 검증된 프로그램이에요.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 수영장 환경 & 특별한 점 -->
+    <section>
+      <div class="wrap reveal">
+        <h2 class="title" style="color:#fff; text-shadow:0 3px 12px rgba(1,30,55,.4)">이런 점이 특별해요</h2>
+        <p class="subtitle" style="color:var(--foam)">쾌적한 환경과 정확한 피드백</p>
+        <div class="merits">
+          <div class="merit">
+            <div class="icon">🌡️</div>
+            <h3>사계절 <span class="big">32도</span> 유지</h3>
+            <p>일년 내내 따뜻한 수온을 유지해<br />언제나 쾌적하게 수영할 수 있어요.</p>
+          </div>
+          <div class="merit">
+            <div class="icon">🌊</div>
+            <h3>수심 <span class="big">1m</span> <small style="font-size:15px; color:#355c73; font-weight:700;">(유아는 0.8m 풀)</small></h3>
+            <p>얕은 수심이라 처음 배우는 초보자도 부담 없이,<br /><b>유아는 더 얕은 0.8m 풀</b>에서 안전하게 시작해요.</p>
+          </div>
+          <div class="merit" style="border-top-color:var(--coral)">
+            <div class="icon">🎥</div>
+            <h3>오즈모 액션캠 피드백</h3>
+            <p>레슨 영상을 직접 눈으로 보며<br />정확한 자세 피드백을 이해할 수 있어요.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5-2. 수업 현장 (사진 + 오즈모 영상) -->
+    <section>
+      <div class="wrap reveal">
+        <h2 class="title" style="color:#fff; text-shadow:0 3px 12px rgba(1,30,55,.4)">수업 현장</h2>
+        <p class="subtitle" style="color:var(--foam)">아이들이 직접 경험하는 진짜 수업 모습이에요</p>
+        <div class="gallery">
+          <img src="수업사진/KakaoTalk_20260621_231311298_04.jpg" alt="수업 현장 1" loading="lazy" />
+          <img src="수업사진/KakaoTalk_20260621_231311298_05.jpg" alt="수업 현장 2" loading="lazy" />
+          <img src="수업사진/KakaoTalk_20260621_231311298_06.jpg" alt="수업 현장 3" loading="lazy" />
+          <img src="수업사진/KakaoTalk_20260621_231311298_07.jpg" alt="수업 현장 4" loading="lazy" />
+          <img src="수업사진/KakaoTalk_20260621_231311298_08.jpg" alt="수업 현장 5" loading="lazy" />
+          <img src="수업사진/KakaoTalk_20260621_231311298_09.jpg" alt="수업 현장 6" loading="lazy" />
+          <img src="수업사진/KakaoTalk_20260621_231311298_10.jpg" alt="수업 현장 7" loading="lazy" />
+          <img src="수업사진/KakaoTalk_20260621_231311298_11.jpg" alt="수업 현장 8" loading="lazy" />
+          <img src="수업사진/KakaoTalk_20260621_231311298_12.jpg" alt="수업 현장 9" loading="lazy" />
+        </div>
+        <p class="gallery-label">🤿 물속에서 보면 이렇게 멋져요</p>
+        <div class="gallery portrait">
+          <img src="물속사진/KakaoTalk_20260621_233121764.jpg" alt="물속 수영 모습 1" loading="lazy" />
+          <img src="물속사진/KakaoTalk_20260621_233121764_01.jpg" alt="물속 수영 모습 2" loading="lazy" />
+          <img src="물속사진/KakaoTalk_20260621_233121764_02.jpg" alt="물속 수영 모습 3" loading="lazy" />
+          <img src="물속사진/KakaoTalk_20260621_233121764_03.jpg" alt="물속 수영 모습 4" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. 차량 운행 -->
+    <section>
+      <div class="wrap reveal">
+        <h2 class="title" style="color:#fff; text-shadow:0 3px 12px rgba(1,30,55,.4)">차량 운행</h2>
+        <p class="subtitle" style="color:var(--foam)">총 3대의 차량이 운행 중이에요</p>
+        <div class="regions">
+          <div class="region"><div class="pin">🚐</div><b>구포</b><small>구포 노선 차량</small></div>
+          <div class="region"><div class="pin">🚐</div><b>만덕</b><small>만덕 노선 차량</small></div>
+          <div class="region"><div class="pin">🚐</div><b>화명</b><small>화명 노선 차량</small></div>
+        </div>
+        <p class="route-line">🚐 구포 · 만덕 · 화명 — 총 3대 운행</p>
+      </div>
+    </section>
+
+    <!-- 6. 학부모 리뷰 -->
+    <section>
+      <div class="wrap reveal">
+        <h2 class="title" style="color:#fff; text-shadow:0 3px 12px rgba(1,30,55,.4)">학부모 후기</h2>
+        <p class="subtitle" style="color:var(--foam)">실제 어머니들께 받은 생생한 후기예요 (이미지를 누르면 크게 볼 수 있어요)</p>
+        <div class="review-shots">
+          <img src="리뷰/rev1.png" alt="학부모 후기 1" loading="lazy" />
+          <img src="리뷰/rev2.png" alt="학부모 후기 2" loading="lazy" />
+          <img src="리뷰/rev3.png" alt="학부모 후기 3" loading="lazy" />
+          <img src="리뷰/rev4.png" alt="학부모 후기 4" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. 무료체험 오퍼 -->
+    <section class="offer" id="offer">
+      <div class="wrap panel reveal">
+        <span class="ribbon">🎁 부담 없이 먼저 경험해 보세요</span>
+        <h2>우리 아이에게 딱 맞는지,<br /><span class="hl">1회 무료체험</span>으로 확인하세요</h2>
+        <p>물을 무서워해도 괜찮아요. 아이가 물과 친해지는 첫걸음을 직접 보고 결정하세요.</p>
+        <div class="how">
+          신청 방법은 간단해요.<br />
+          <b>📞 010-8763-2465</b><br />
+          (돌핀어린이수영장)로 연락해 일정만 잡으시면 됩니다.
+        </div>
+        <a class="btn-contact btn-call" href="tel:010-8763-2465">📞 무료체험 신청하기</a>
+      </div>
+    </section>
+
+    <!-- 8. 푸터 / 연락처 -->
+    <footer id="contact">
+      <div class="footer-wrap">
+        <h2>상담 문의하기</h2>
+        <p style="color:var(--light)">수업·차량·생존수영·무료체험 무엇이든 편하게 문의주세요.</p>
+
+        <div class="contact-cards">
+          <div class="contact-card">
+            <div class="ico">🏊</div>
+            <div class="role">돌핀어린이수영장</div>
+            <div class="for">일반 문의 · 등록 · 무료체험</div>
+            <a class="tel" href="tel:010-8763-2465">010-8763-2465</a>
+          </div>
+          <div class="contact-card hulk">
+            <div class="ico">💪</div>
+            <div class="role">헐크쌤 (최지유)</div>
+            <div class="for">개인레슨 상담</div>
+            <a class="tel" href="tel:010-9137-6990">010-9137-6990</a>
+          </div>
+        </div>
+
+        <p class="contact-note">📌 일반 문의는 <b>수영장(010-8763-2465)</b>으로 바로 연락 주시면 되고, <span class="pt">개인레슨 상담</span>은 <b>헐크쌤(010-9137-6990)</b>에게 직접 연락 주세요!</p>
+
+        <div class="info">
+          <div><span class="label">위치</span>부산 북구 금곡대로 222 동원아쿠아 2층, 돌핀어린이수영장</div>
+        </div>
+
+        <!-- 카카오톡 상담 -->
+        <div id="kakao">
+          <p style="color:var(--light); margin-bottom:6px;">헐크쌤에게 <b style="color:#FEE500;">카카오톡</b>으로도 편하게 상담하세요. QR을 스캔하거나 ID <b style="color:#FEE500;">jiyoo6990</b> 를 검색하시면 됩니다.</p>
+          <div class="kakao-qr">
+            <img src="카톡아이디.jpg" alt="카카오톡 상담 QR 코드 - 최지유 jiyoo6990" />
+            <div class="id">카카오톡 ID · <span>jiyoo6990</span> (최지유)</div>
+          </div>
+        </div>
+
+        <!-- 네이버 지도 -->
+        <div class="map-wrap">
+          <iframe
+            title="돌핀어린이수영장 위치"
+            src="https://maps.google.com/maps?q=%EB%B6%80%EC%82%B0%20%EB%B6%81%EA%B5%AC%20%EA%B8%88%EA%B3%A1%EB%8C%80%EB%A1%9C%20222&z=16&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <a class="map-link" href="https://map.naver.com/p/search/%EB%B6%80%EC%82%B0%20%EB%B6%81%EA%B5%AC%20%EA%B8%88%EA%B3%A1%EB%8C%80%EB%A1%9C%20222%20%EB%8F%99%EC%9B%90%EC%95%84%EC%BF%A0%EC%95%84" target="_blank" rel="noopener">🗺️ 네이버 지도에서 길찾기</a>
+
+        <p class="copy">© 2026 돌핀어린이수영장 · 헐크쌤 최지유 · 부산 북구 금곡대로 222 동원아쿠아 2층</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- 라이트박스(이미지 확대) -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" id="lightboxClose">&times;</span>
+    <img src="" alt="확대 이미지" id="lightboxImg" />
+  </div>
+
+<script>
+  /* ===== 물방울 생성 ===== */
+  (function makeBubbles(){
+    const layer = document.getElementById('bubbles');
+    const count = 26;
+    for (let i = 0; i < count; i++) {
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      const size = 6 + Math.random() * 26;
+      b.style.width  = size + 'px';
+      b.style.height = size + 'px';
+      b.style.left   = Math.random() * 100 + 'vw';
+      b.style.animationDuration = (8 + Math.random() * 12) + 's';
+      b.style.animationDelay    = (Math.random() * 12) + 's';
+      layer.appendChild(b);
+    }
+  })();
+
+  /* ===== 헤엄치는 해양생물 생성 ===== */
+  (function makeSwimmers(){
+    const layer = document.getElementById('swimmers');
+    const creatures = ['🐢','🐠','🐡','🐬','🐟','🦈','🐙','🪼'];
+    const count = 12;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'swimmer';
+      s.textContent = creatures[Math.floor(Math.random() * creatures.length)];
+      s.style.top  = (Math.random() * 90) + 'vh';
+      s.style.fontSize = (28 + Math.random() * 36) + 'px';
+      const dur = 16 + Math.random() * 22;
+      const reverse = Math.random() < 0.5;
+      s.style.animationName = (reverse ? 'swim-reverse' : 'swim') + ', bob';
+      s.style.animationDuration = dur + 's, ' + (2 + Math.random() * 2) + 's';
+      s.style.animationDelay = (Math.random() * dur) + 's, 0s';
+      layer.appendChild(s);
+    }
+  })();
+
+  /* ===== 스크롤 등장 효과 ===== */
+  (function reveal(){
+    const items = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+    }, { threshold: 0.15 });
+    items.forEach(i => io.observe(i));
+  })();
+
+  /* ===== 라이트박스(사진·후기 확대) ===== */
+  (function lightbox(){
+    const box = document.getElementById('lightbox');
+    const boxImg = document.getElementById('lightboxImg');
+    const close = document.getElementById('lightboxClose');
+    document.querySelectorAll('.gallery img, .review-shots img').forEach(img => {
+      img.addEventListener('click', () => {
+        boxImg.src = img.src;
+        box.classList.add('open');
+      });
+    });
+    function hide(){ box.classList.remove('open'); boxImg.src = ''; }
+    box.addEventListener('click', hide);
+    close.addEventListener('click', hide);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
+  })();
+
+  /* ===== 상담 영역에서는 떠다니는 버튼 숨기기 ===== */
+  (function floatToggle(){
+    const btn = document.getElementById('floatConsult');
+    const contact = document.getElementById('contact');
+    if (!btn || !contact) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => btn.classList.toggle('hide', e.isIntersecting));
+    }, { threshold: 0.1 });
+    io.observe(contact);
+  })();
+</script>
+</body>
+</html>
