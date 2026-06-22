@@ -16,32 +16,49 @@
     --foam: #e1f5fe;
     --sun: #ffd54f;
     --coral: #ff7043;
+    --emerald: #36c2c9;
+    --kelp: #1f8f7a;
+    --coralpink: #ff8a9b;
+    --deepsea: #021a33;
   }
   html { scroll-behavior: smooth; }
   body {
     font-family: "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
     color: #08344f;
-    background: linear-gradient(180deg, #014f86 0%, #0277bd 35%, #039be5 70%, #4fc3f7 100%);
-    background-attachment: fixed;
+    /* 수면(에메랄드) → 심해(짙은 남색)로 내려갈수록 깊어지는 그라데이션 */
+    background: linear-gradient(180deg,
+      #4ecbc0 0%,
+      #2cb5b6 8%,
+      #169fbb 18%,
+      #1287b3 32%,
+      #0e6c9f 46%,
+      #0a5082 60%,
+      #073a63 74%,
+      #052a4a 86%,
+      #021a33 100%);
     overflow-x: hidden;
     line-height: 1.7;
   }
 
-  /* ===== 물속 빛 일렁임 ===== */
+  /* ===== 수면에서 들어오는 햇살(빛줄기) ===== */
   .water-light {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
+    mix-blend-mode: screen;
     background:
-      radial-gradient(circle at 20% 10%, rgba(255,255,255,0.25), transparent 45%),
-      radial-gradient(circle at 75% 20%, rgba(255,255,255,0.18), transparent 40%),
-      radial-gradient(circle at 50% 60%, rgba(255,255,255,0.12), transparent 50%);
+      radial-gradient(135% 75% at 50% -18%, rgba(255,243,200,0.55), rgba(255,243,200,0) 55%),
+      repeating-linear-gradient(101deg,
+        rgba(255,255,255,0) 0 72px,
+        rgba(255,255,255,0.075) 72px 98px,
+        rgba(255,255,255,0) 98px 170px);
     animation: shimmer 9s ease-in-out infinite alternate;
+    transition: opacity .5s ease;
   }
   @keyframes shimmer {
-    0%   { opacity: .55; transform: translateY(0) scale(1); }
-    100% { opacity: 1;   transform: translateY(-25px) scale(1.08); }
+    0%   { opacity: .7; transform: translateX(0) skewX(0deg); }
+    100% { opacity: 1;  transform: translateX(-28px) skewX(-2deg); }
   }
 
   /* ===== 물방울 ===== */
@@ -85,6 +102,57 @@
     from { margin-top: -14px; }
     to   { margin-top: 14px; }
   }
+  .swimmer svg { display: block; width: 100%; height: auto; }
+  .swimmer .wiggle { animation: wiggle 3.4s ease-in-out infinite; transform-origin: center; }
+  @keyframes wiggle { 0%,100%{ transform: rotate(-2.5deg); } 50%{ transform: rotate(2.5deg); } }
+
+  /* ===== 바다 표면 · 떠 있는 배 ===== */
+  .surface-zone {
+    position: absolute; top: 0; left: 0; width: 100%; height: 150vh;
+    z-index: 1; pointer-events: none; overflow: hidden;
+  }
+  .boat {
+    position: absolute; font-size: 48px;
+    filter: drop-shadow(0 7px 9px rgba(1,30,55,0.25));
+    transform-origin: center bottom;
+    animation: boatbob 5s ease-in-out infinite;
+  }
+  @keyframes boatbob {
+    0%,100% { transform: translateY(0) rotate(-4deg); }
+    50%     { transform: translateY(11px) rotate(4deg); }
+  }
+
+  /* ===== 바다 바닥 (미역 · 산호초 · 돌) ===== */
+  .seabed {
+    position: fixed; left: 0; bottom: 0; width: 100%; height: 240px;
+    z-index: 1; pointer-events: none; opacity: 0; transition: opacity .6s ease;
+  }
+  .seabed .floor {
+    position: absolute; left: 0; bottom: 0; width: 100%; height: 78px;
+    background: linear-gradient(180deg, rgba(2,22,35,0) 0%, #042029 60%, #02151d 100%);
+  }
+  /* 짧은 수초(잔디) */
+  .grass {
+    position: absolute; bottom: 14px; width: 9px; border-radius: 9px 9px 0 0;
+    transform-origin: bottom center;
+    background: linear-gradient(180deg, #57c9a4, #155a44);
+    animation: sway 3.8s ease-in-out infinite alternate; opacity: .85;
+  }
+  .kelp {
+    position: absolute; bottom: 20px; width: 13px; border-radius: 13px 13px 0 0;
+    transform-origin: bottom center;
+    background: linear-gradient(180deg, #3cc0a6, #0c5247);
+    animation: sway 4.6s ease-in-out infinite alternate; opacity: .92;
+  }
+  @keyframes sway { from { transform: rotate(-7deg) scaleY(.97); } to { transform: rotate(7deg) scaleY(1); } }
+  .rock {
+    position: absolute; bottom: 8px;
+    border-radius: 48% 52% 40% 40% / 64% 60% 40% 40%;
+    background: radial-gradient(circle at 38% 28%, #2c5066, #112b3c);
+    box-shadow: inset -4px -6px 10px rgba(0,0,0,0.4);
+  }
+  .coral { position: absolute; bottom: 16px; transform-origin: bottom center; animation: sway 5.6s ease-in-out infinite alternate; }
+  .coral i { position: absolute; bottom: 0; display: block; border-radius: 16px 16px 0 0; }
 
   /* ===== 콘텐츠 공통 ===== */
   .content { position: relative; z-index: 2; }
@@ -153,6 +221,22 @@
     max-width: 620px;
     font-weight: 500;
   }
+  .hero-kicker {
+    display: inline-block; color: var(--foam);
+    font-size: clamp(14px, 2.2vw, 18px); font-weight: 700; letter-spacing: .5px;
+    margin-bottom: 18px; text-shadow: 0 2px 12px rgba(1,30,55,.45);
+  }
+  .hero h1 .adv {
+    background: linear-gradient(transparent 62%, rgba(255,213,79,.55) 62%);
+    color: var(--sun); padding: 0 4px;
+  }
+  .hero-name {
+    margin-top: 20px; display: inline-flex; align-items: center; gap: 10px;
+    color: #fff; font-weight: 800; font-size: clamp(18px, 3vw, 25px); letter-spacing: 1px;
+    text-shadow: 0 4px 16px rgba(1,30,55,.45);
+    background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.45);
+    padding: 8px 22px; border-radius: 999px; backdrop-filter: blur(3px);
+  }
   .hero .scroll-cue {
     margin-top: 54px;
     color: #fff;
@@ -161,8 +245,9 @@
     animation: bobcue 1.6s ease-in-out infinite;
   }
   @keyframes bobcue { 0%,100%{transform:translateY(0)} 50%{transform:translateY(10px)} }
-  .hero-creatures { font-size: 50px; margin-top: 30px; letter-spacing: 14px; }
-  .hero-creatures span { display: inline-block; animation: bob 2.4s ease-in-out infinite alternate; }
+  .hero-creatures { margin-top: 34px; display: flex; gap: 22px; justify-content: center; align-items: flex-end; }
+  .hero-creatures span { display: inline-block; animation: bob 2.4s ease-in-out infinite alternate; filter: drop-shadow(0 5px 7px rgba(1,30,55,.25)); }
+  .hero-creatures svg { width: 56px; height: auto; display: block; }
   .hero-creatures span:nth-child(2){ animation-delay:.4s; }
   .hero-creatures span:nth-child(3){ animation-delay:.8s; }
   .hero-creatures span:nth-child(4){ animation-delay:1.2s; }
@@ -604,6 +689,62 @@
   .faq .a { padding:0 22px 20px; color:#34586e; font-size:15.5px; line-height:1.85; }
   .faq .a b { color:var(--deep); }
 
+  /* ===== 경력 · 자격 · 전문성 ===== */
+  .cred-wrap { margin-top: 30px; border-top: 1.5px dashed #cfe6f5; padding-top: 26px; }
+  .cred-head {
+    font-size: 18px; font-weight: 800; color: var(--deep);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .career { margin-bottom: 30px; }
+  .career-item {
+    position: relative; padding: 0 0 18px 26px; border-left: 2px solid var(--aqua);
+  }
+  .career-item:last-child { padding-bottom: 0; border-left-color: transparent; }
+  .career-item::before {
+    content: ""; position: absolute; left: -8px; top: 3px;
+    width: 13px; height: 13px; border-radius: 50%;
+    background: var(--sea); border: 2px solid #fff; box-shadow: 0 0 0 2px var(--aqua);
+  }
+  .career-item .period { font-size: 13.5px; font-weight: 800; color: var(--ocean); }
+  .career-item .place { font-size: 16px; color: #2c5067; font-weight: 600; }
+  .career-item.now::before { background: var(--coral); box-shadow: 0 0 0 2px var(--sun); }
+  .career-item.now .period { color: var(--coral); }
+  .creds { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cred {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: linear-gradient(135deg, #eef9ff, #fff);
+    border: 1.5px solid #d3ecfb; border-radius: 14px; padding: 11px 16px;
+    font-size: 14.5px; font-weight: 700; color: var(--deep);
+    box-shadow: 0 6px 16px rgba(1,42,73,.08);
+  }
+  .cred .ci { font-size: 21px; line-height: 1; }
+  .cred small { display: block; font-weight: 600; font-size: 12.5px; color: var(--ocean); margin-top: 1px; }
+  .cred.gold { border-color: var(--sun); background: linear-gradient(135deg, #fff8e6, #fff); }
+  .cred.navy { background: linear-gradient(135deg, #013a63, #0277bd); color: #fff; border-color: var(--sun); }
+  .cred.navy small { color: var(--light); }
+
+  /* ===== 카카오톡 느낌 후기 말풍선 ===== */
+  .kreviews { display: grid; gap: 20px; grid-template-columns: 1fr; max-width: 860px; margin: 0 auto; }
+  @media(min-width:760px){ .kreviews { grid-template-columns: 1fr 1fr; } }
+  .krev {
+    background: rgba(255,255,255,0.96); border-radius: 18px; padding: 22px 22px 18px;
+    box-shadow: 0 10px 26px rgba(1,42,73,.16);
+  }
+  .krev .head { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
+  .krev .ava {
+    width: 44px; height: 44px; border-radius: 14px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+    background: linear-gradient(160deg, var(--light), var(--aqua));
+  }
+  .krev .name { font-weight: 800; color: var(--deep); font-size: 15px; }
+  .krev .bubble {
+    position: relative; background: linear-gradient(160deg, #fff, var(--foam));
+    border: 1.5px solid #d8eefb; border-radius: 6px 16px 16px 16px;
+    padding: 14px 16px; color: #34586e; font-size: 15px; line-height: 1.75;
+  }
+  .krev .stars { color: var(--sun); margin-top: 12px; font-size: 15px; letter-spacing: 2px; }
+  .krev .time { display: block; text-align: right; color: #9bb6c7; font-size: 12px; margin-top: 8px; }
+
   /* 등장 애니메이션 */
   .reveal { opacity:0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
   .reveal.show { opacity:1; transform:none; }
@@ -612,9 +753,11 @@
 <body>
 
   <!-- 배경 효과 -->
-  <div class="water-light"></div>
+  <div class="water-light" id="waterLight"></div>
+  <div class="surface-zone" id="surfaceZone"></div>
   <div class="bubbles" id="bubbles"></div>
   <div class="swimmers" id="swimmers"></div>
+  <div class="seabed" id="seabed"><div class="floor"></div></div>
 
   <!-- 오른쪽 하단 로고 -->
   <div class="floating-logos">
@@ -633,18 +776,17 @@
     <!-- 1. 첫 화면 -->
     <section class="hero">
       <span class="badge-loc">📍 부산 화명동 · 돌핀어린이수영장</span>
+      <span class="hero-kicker">🌊 수영은 더 넓은 세상으로 향하는 모험의 출발점</span>
       <h1>
-        <span class="nick">💪 헐크쌤</span>
-        최지유
+        헐크쌤과 함께<br /><span class="adv">모험을 떠날 준비</span>가<br />되셨나요?
       </h1>
-      <p class="lead">아이들이 물을 무서워하지 않고, 스스로를 지킬 수 있도록.<br />물을 이해하고 즐기게 하는 어린이 수영 선생님입니다.</p>
+      <p class="hero-name">💪 헐크쌤 <span class="dot">·</span> 최지유</p>
+      <p class="lead">물을 무서워하지 않고, 스스로를 지킬 수 있도록.<br />아이 한 명 한 명과 물에서의 첫 모험을 함께하는 어린이 수영 선생님입니다.</p>
       <div class="hero-btns">
         <a href="#offer" class="primary">🎁 1회 무료체험 신청</a>
         <a href="#contact" class="ghost">상담 문의하기</a>
       </div>
-      <div class="hero-creatures">
-        <span>🐢</span><span>🐠</span><span>🐡</span><span>🐬</span>
-      </div>
+      <div class="hero-creatures" id="heroCreatures"></div>
       <div class="scroll-cue">아래로 스크롤 ⌄</div>
     </section>
 
@@ -652,7 +794,7 @@
     <section style="padding-top:50px; padding-bottom:50px;">
       <div class="wrap reveal">
         <div class="stats">
-          <div class="stat"><div class="num">6<small>년</small></div><div class="lbl">지도 경력</div></div>
+          <div class="stat"><div class="num">5<small>년</small></div><div class="lbl">지도 경력</div></div>
           <div class="stat"><div class="num">1,000<small>명+</small></div><div class="lbl">누적 수강생</div></div>
           <div class="stat"><div class="num">30<small>곳+</small></div><div class="lbl">생존수영 진행<br />학교·유치원</div></div>
           <div class="stat"><div class="num">무사고<small> ✓</small></div><div class="lbl">안전 최우선 운영</div></div>
@@ -661,7 +803,7 @@
     </section>
 
     <!-- 2. 선생님 소개 -->
-    <section>
+    <section id="intro">
       <div class="wrap panel reveal">
         <h2 class="title">선생님 소개</h2>
         <p class="subtitle">믿고 맡길 수 있는 자격과 경험</p>
@@ -681,6 +823,35 @@
                 <small>해양경찰청 발급 자격증</small>
               </span>
             </div>
+          </div>
+        </div>
+
+        <!-- 경력 -->
+        <div class="cred-wrap">
+          <div class="cred-head">📈 경력 <span style="font-size:13px;color:var(--ocean);font-weight:700;">(수영 지도 5년)</span></div>
+          <div class="career">
+            <div class="career-item">
+              <div class="period">2022.04 ~ 2023.06</div>
+              <div class="place">부산학생안전체험관</div>
+            </div>
+            <div class="career-item">
+              <div class="period">2023.07 ~ 2025.03</div>
+              <div class="place">사직 지니키즈스윔스쿨</div>
+            </div>
+            <div class="career-item now">
+              <div class="period">2025.05 ~ 현재</div>
+              <div class="place">돌핀어린이수영장</div>
+            </div>
+          </div>
+
+          <!-- 자격 · 전문성 -->
+          <div class="cred-head">🛟 자격 · 전문성</div>
+          <div class="creds">
+            <span class="cred gold"><span class="ci">🏅</span><span>수상구조사 1급<small>해양경찰청</small></span></span>
+            <span class="cred navy"><span class="ci">🌊</span><span>해양재난구조대원<small>해양경찰 다대포파출소 소속</small></span></span>
+            <span class="cred"><span class="ci">🤿</span><span>오픈워터 스쿠버 다이버</span></span>
+            <span class="cred"><span class="ci">🚤</span><span>동력수상레저기구 조종면허 1급</span></span>
+            <span class="cred navy"><span class="ci">🎖️</span><span>해병대 제6여단 근무<small>해병 兵 1243기</small></span></span>
           </div>
         </div>
       </div>
@@ -849,15 +1020,43 @@
     </section>
 
     <!-- 6. 학부모 리뷰 -->
-    <section>
+    <section id="reviews">
       <div class="wrap reveal">
         <h2 class="title" style="color:#fff; text-shadow:0 3px 12px rgba(1,30,55,.4)">학부모 후기</h2>
-        <p class="subtitle" style="color:var(--foam)">실제 어머니들께 받은 생생한 후기예요 (이미지를 누르면 크게 볼 수 있어요)</p>
-        <div class="review-shots">
-          <img src="리뷰/rev1.png" alt="학부모 후기 1" loading="lazy" />
-          <img src="리뷰/rev2.png" alt="학부모 후기 2" loading="lazy" />
-          <img src="리뷰/rev3.png" alt="학부모 후기 3" loading="lazy" />
-          <img src="리뷰/rev4.png" alt="학부모 후기 4" loading="lazy" />
+        <p class="subtitle" style="color:var(--foam)">실제 어머니들께 카카오톡으로 받은 생생한 후기예요 💬</p>
+        <div class="kreviews">
+          <div class="krev">
+            <div class="head"><span class="ava">👦</span><span class="name">초5 남자아이 어머니</span></div>
+            <div class="bubble">
+              선생님 덕분에 아이가 양팔 접영까지 시도하게 됐어요. 정말 놀랍고 대박이에요! 처음엔 친구들이 그만둬서 어색해하고 부끄러워했는데, 용기 내서 꾸준히 다니다 보니 이제는 물에서 편안해하고 웃기도 한답니다. 늘 친절하게, 또 적극적으로 배려해 주셔서 감사합니다 😊
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="time">오후 8:53</span>
+            </div>
+          </div>
+          <div class="krev">
+            <div class="head"><span class="ava">👦</span><span class="name">초2 남자아이 어머니</span></div>
+            <div class="bubble">
+              자유형 자세가 눈에 띄게 좋아져서 흐뭇해요. 선생님이 잘 가르쳐 주신 덕분인 것 같아요! 독감으로 결석할 때도 아픈 와중에 수영 못 가는 걸 더 아쉬워하더라고요 😂 그만큼 수업을 좋아한답니다. 앞으로도 잘 부탁드릴게요^^
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="time">오후 3:03</span>
+            </div>
+          </div>
+          <div class="krev">
+            <div class="head"><span class="ava">👧</span><span class="name">초3 여자아이 어머니</span></div>
+            <div class="bubble">
+              코치님 덕분에 아이가 수영에 재미를 느끼고 자신감이 정말 많이 생겼어요. 천천히라도 늘면 좋겠다 했는데, 기대 이상으로 즐거워하고 잘하는 모습에 감동했습니다. 항상 감사드리고 앞으로도 잘 부탁드려요^^
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="time">오전 9:25</span>
+            </div>
+          </div>
+          <div class="krev">
+            <div class="head"><span class="ava">👧</span><span class="name">초6 여자아이 어머니</span></div>
+            <div class="bubble">
+              보내주신 수업 영상 너무 감사해요^^ 아이가 접영까지 하게 될 줄 몰랐는데, 수영을 정말 좋아하게 된 것 같아요. 세심하게 잘 지도해 주셔서 늘 고맙습니다 😄
+              <span class="stars">⭐⭐⭐⭐⭐</span>
+              <span class="time">오후 2:52</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -916,14 +1115,22 @@
     </section>
 
     <!-- 6-4. 자주 묻는 질문 -->
-    <section>
+    <section id="faq">
       <div class="wrap panel reveal">
         <h2 class="title">자주 묻는 질문</h2>
         <p class="subtitle">궁금한 점을 모았어요 (질문을 누르면 답이 열려요)</p>
         <div class="faq">
           <details open>
             <summary><span>💰 수강료(비용)는 얼마인가요?</span></summary>
-            <div class="a">프로그램(단체·개인레슨·성인 소그룹·생존수영)과 횟수에 따라 달라요. 정확한 비용은 상담 시 안내해 드립니다. <b>일반 문의 010-8763-2465</b>, 개인레슨 상담은 <b>헐크쌤 010-9137-6990</b>으로 연락 주세요.</div>
+            <div class="a">
+              프로그램과 횟수에 따라 달라요. 대표 기준은 아래와 같습니다.
+              <ul style="margin:10px 0 4px; padding-left:20px; line-height:2;">
+                <li><b>단체수업</b> — 주 1회 기준 <b>월 12만원</b> (횟수에 따라 달라져요)</li>
+                <li><b>성인 소그룹</b> — 주 2회반 <b>월 12만원</b> · 주 3회반 <b>월 18만원</b></li>
+                <li><b>개인레슨</b> — 회당 <b>5만원</b> (주 1회 기준 <b>월 20만원</b>)</li>
+              </ul>
+              생존수영 등 그 외 프로그램과 자세한 안내는 <b>일반 문의 010-8763-2465</b>, 개인레슨 상담은 <b>헐크쌤 010-9137-6990</b>으로 편하게 연락 주세요.
+            </div>
           </details>
           <details>
             <summary><span>🕒 수업은 언제 하나요?</span></summary>
@@ -1047,23 +1254,206 @@
     }
   })();
 
-  /* ===== 헤엄치는 해양생물 생성 ===== */
+  /* ===== 해양생물 SVG (오른쪽을 바라봄) ===== */
+  const CREATURE = {
+    turtle: () => `
+      <svg viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="42" cy="74" rx="15" ry="8" fill="#2f8f6f"><animateTransform attributeName="transform" type="rotate" values="-14 42 68;16 42 68;-14 42 68" dur="2s" repeatCount="indefinite"/></ellipse>
+        <ellipse cx="42" cy="26" rx="15" ry="8" fill="#2f8f6f"><animateTransform attributeName="transform" type="rotate" values="14 42 32;-16 42 32;14 42 32" dur="2s" repeatCount="indefinite"/></ellipse>
+        <ellipse cx="92" cy="72" rx="18" ry="9" fill="#3aa07d"><animateTransform attributeName="transform" type="rotate" values="12 88 66;38 88 66;12 88 66" dur="1.5s" repeatCount="indefinite"/></ellipse>
+        <ellipse cx="92" cy="28" rx="18" ry="9" fill="#3aa07d"><animateTransform attributeName="transform" type="rotate" values="-12 88 34;-38 88 34;-12 88 34" dur="1.5s" repeatCount="indefinite"/></ellipse>
+        <ellipse cx="64" cy="50" rx="41" ry="34" fill="#26795e"/>
+        <ellipse cx="64" cy="50" rx="41" ry="34" fill="none" stroke="#184f3d" stroke-width="2.5"/>
+        <path d="M64 18 L64 82 M25 50 L103 50 M40 28 L88 72 M88 28 L40 72" stroke="#46a884" stroke-width="3" opacity=".5" fill="none"/>
+        <circle cx="64" cy="50" r="15" fill="#46a884" opacity=".5"/>
+        <circle cx="116" cy="50" r="13" fill="#4cc09a"/>
+        <circle cx="121" cy="46" r="2.6" fill="#08344f"/>
+      </svg>`,
+    octopus: () => `
+      <svg viewBox="0 0 120 132" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#c46bdf" stroke-width="10" stroke-linecap="round" fill="none">
+          <path d="M33 76 q-22 18 -27 34"><animateTransform attributeName="transform" type="rotate" values="-7 60 78;5 60 78;-7 60 78" dur="2.8s" repeatCount="indefinite"/></path>
+          <path d="M44 82 q-14 24 -20 42"><animateTransform attributeName="transform" type="rotate" values="-5 60 80;7 60 80;-5 60 80" dur="3.3s" repeatCount="indefinite"/></path>
+          <path d="M55 86 q-5 26 -8 44"><animateTransform attributeName="transform" type="rotate" values="-4 60 84;5 60 84;-4 60 84" dur="2.6s" repeatCount="indefinite"/></path>
+          <path d="M65 86 q5 26 8 44"><animateTransform attributeName="transform" type="rotate" values="4 60 84;-5 60 84;4 60 84" dur="3.1s" repeatCount="indefinite"/></path>
+          <path d="M76 82 q14 24 20 42"><animateTransform attributeName="transform" type="rotate" values="5 60 80;-7 60 80;5 60 80" dur="2.9s" repeatCount="indefinite"/></path>
+          <path d="M87 76 q22 18 27 34"><animateTransform attributeName="transform" type="rotate" values="7 60 78;-5 60 78;7 60 78" dur="3.4s" repeatCount="indefinite"/></path>
+        </g>
+        <ellipse cx="60" cy="48" rx="43" ry="41" fill="#cf7ce6"/>
+        <ellipse cx="60" cy="46" rx="38" ry="35" fill="#d98fee"/>
+        <circle cx="45" cy="46" r="10" fill="#fff"/><circle cx="47" cy="48" r="5" fill="#08344f"/>
+        <circle cx="75" cy="46" r="10" fill="#fff"/><circle cx="73" cy="48" r="5" fill="#08344f"/>
+        <path d="M52 64 q8 8 16 0" stroke="#08344f" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="37" cy="58" r="5" fill="#ff9aa0" opacity=".5"/>
+        <circle cx="83" cy="58" r="5" fill="#ff9aa0" opacity=".5"/>
+      </svg>`,
+    puffer: () => {
+      // 가시(별 모양) 좌표 생성
+      const cx=62, cy=58, n=15, ro=46, ri=35; let pts=[];
+      for(let i=0;i<n*2;i++){ const r=i%2?ri:ro; const a=Math.PI*2*i/(n*2)-Math.PI/2;
+        pts.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1)); }
+      return `
+      <svg viewBox="0 0 124 112" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 56 q-22 -16 -25 0 q3 16 25 0 Z" fill="#f0a043"><animateTransform attributeName="transform" type="rotate" values="-11 30 56;11 30 56;-11 30 56" dur="1.1s" repeatCount="indefinite"/></path>
+        <polygon points="${pts.join(' ')}" fill="#f4b765"/>
+        <circle cx="62" cy="58" r="35" fill="#ffc56f"/>
+        <ellipse cx="62" cy="70" rx="26" ry="17" fill="#fff3d8"/>
+        <path d="M72 56 q16 -6 24 4 q-14 6 -24 3Z" fill="#f0a043"><animateTransform attributeName="transform" type="rotate" values="-9 72 58;9 72 58;-9 72 58" dur="1.3s" repeatCount="indefinite"/></path>
+        <circle cx="54" cy="50" r="8" fill="#fff"/><circle cx="57" cy="51" r="4" fill="#222"/>
+        <circle cx="74" cy="50" r="8" fill="#fff"/><circle cx="77" cy="51" r="4" fill="#222"/>
+        <circle cx="46" cy="64" r="5.5" fill="#ff9aa0" opacity=".55"/>
+        <circle cx="80" cy="64" r="5.5" fill="#ff9aa0" opacity=".55"/>
+        <path d="M60 66 q6 5 12 0" stroke="#a85b1c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      </svg>`;
+    },
+    fish: () => `
+      <svg viewBox="0 0 132 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M42 40 L8 17 L8 63 Z" fill="#ff9f43"><animateTransform attributeName="transform" type="rotate" values="-13 42 40;13 42 40;-13 42 40" dur="0.85s" repeatCount="indefinite"/></path>
+        <ellipse cx="76" cy="40" rx="43" ry="27" fill="#ffb65c"/>
+        <path d="M68 13 q16 -6 31 7 q-16 2 -31 8Z" fill="#ff9f43"/>
+        <path d="M60 18 q-7 22 0 44" stroke="#ff8c2b" stroke-width="5" fill="none" opacity=".4" stroke-linecap="round"/>
+        <circle cx="102" cy="34" r="6.5" fill="#fff"/><circle cx="104" cy="35" r="3.2" fill="#222"/>
+        <path d="M106 47 q8 4 13 -2" stroke="#d9772a" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>`
+  };
+
+  /* ===== 헤엄치는 해양생물 생성 (거북이2·문어2·복어2·물고기2) ===== */
   (function makeSwimmers(){
     const layer = document.getElementById('swimmers');
-    const creatures = ['🐢','🐠','🐡','🐬','🐟','🦈','🐙','🪼'];
-    // 종류별로 1마리씩만 (너무 많지 않게)
-    creatures.forEach((c) => {
+    const plan = [
+      { type:'turtle', min:96,  max:128 },
+      { type:'turtle', min:96,  max:128 },
+      { type:'octopus', min:70, max:94 },
+      { type:'octopus', min:70, max:94 },
+      { type:'puffer', min:70,  max:94 },
+      { type:'puffer', min:70,  max:94 },
+      { type:'fish',   min:80,  max:108 },
+      { type:'fish',   min:80,  max:108 }
+    ];
+    plan.forEach((p, i) => {
       const s = document.createElement('div');
       s.className = 'swimmer';
-      s.textContent = c;
-      s.style.top  = (Math.random() * 90) + 'vh';
-      s.style.fontSize = (28 + Math.random() * 36) + 'px';
-      const dur = 16 + Math.random() * 22;
-      const reverse = Math.random() < 0.5;
+      s.innerHTML = CREATURE[p.type]();
+      s.style.width = (p.min + Math.random() * (p.max - p.min)) + 'px';
+      s.style.top = (4 + Math.random() * 84) + 'vh';
+      const dur = 20 + Math.random() * 22;
+      const reverse = i % 2 === 0;
       s.style.animationName = (reverse ? 'swim-reverse' : 'swim') + ', bob';
-      s.style.animationDuration = dur + 's, ' + (2 + Math.random() * 2) + 's';
-      s.style.animationDelay = (Math.random() * dur) + 's, 0s';
+      s.style.animationDuration = dur + 's, ' + (2.4 + Math.random() * 2) + 's';
+      s.style.animationDelay = (-Math.random() * dur) + 's, 0s';
       layer.appendChild(s);
+    });
+  })();
+
+  /* ===== 수면에 떠 있는 귀여운 배 ===== */
+  (function makeBoats(){
+    const layer = document.getElementById('surfaceZone');
+    if (!layer) return;
+    const boats = [
+      { e:'⛵', left:12, top:2.5, size:52 },
+      { e:'🛶', left:62, top:5.5, size:46 },
+      { e:'🚣', left:82, top:1.5, size:44 }
+    ];
+    boats.forEach((b, i) => {
+      const d = document.createElement('div');
+      d.className = 'boat';
+      d.textContent = b.e;
+      d.style.left = b.left + 'vw';
+      d.style.top = b.top + 'vh';
+      d.style.fontSize = b.size + 'px';
+      d.style.animationDelay = (i * 0.8) + 's';
+      layer.appendChild(d);
+    });
+  })();
+
+  /* ===== 바다 바닥 (돌·미역·산호초) ===== */
+  (function makeSeabed(){
+    const layer = document.getElementById('seabed');
+    if (!layer) return;
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    // 돌
+    for (let i = 0; i < 11; i++) {
+      const r = document.createElement('div');
+      r.className = 'rock';
+      r.style.left = rnd(0, 96) + 'vw';
+      r.style.width = rnd(40, 92) + 'px';
+      r.style.height = rnd(20, 42) + 'px';
+      layer.appendChild(r);
+    }
+    // 미역(켈프)
+    const kelpCols = ['#3cc0a6','#2fae93','#23997f'];
+    for (let i = 0; i < 24; i++) {
+      const k = document.createElement('div');
+      k.className = 'kelp';
+      k.style.left = rnd(0, 98) + 'vw';
+      k.style.height = rnd(62, 175) + 'px';
+      k.style.width = rnd(10, 16) + 'px';
+      const c = kelpCols[i % kelpCols.length];
+      k.style.background = 'linear-gradient(180deg,' + c + ',#0c5247)';
+      k.style.animationDuration = rnd(3.6, 5.8) + 's';
+      k.style.animationDelay = (-rnd(0, 3.5)) + 's';
+      layer.appendChild(k);
+    }
+    // 짧은 수초(잔디)
+    for (let i = 0; i < 26; i++) {
+      const g = document.createElement('div');
+      g.className = 'grass';
+      g.style.left = rnd(0, 99) + 'vw';
+      g.style.height = rnd(26, 64) + 'px';
+      g.style.width = rnd(7, 11) + 'px';
+      g.style.animationDuration = rnd(3, 4.6) + 's';
+      g.style.animationDelay = (-rnd(0, 3)) + 's';
+      layer.appendChild(g);
+    }
+    // 산호초
+    const coralCols = ['#ff8a9b','#ffb15c','#b98cff','#ff7aa8','#5ad1c4'];
+    for (let i = 0; i < 9; i++) {
+      const c = document.createElement('div');
+      c.className = 'coral';
+      c.style.left = rnd(2, 90) + 'vw';
+      c.style.animationDuration = rnd(4.6, 6.2) + 's';
+      c.style.animationDelay = (-rnd(0, 3)) + 's';
+      const color = coralCols[i % coralCols.length];
+      const fingers = 3 + Math.floor(Math.random() * 2);
+      let x = 0, maxX = 0;
+      for (let j = 0; j < fingers; j++) {
+        const w = rnd(13, 17), h = rnd(26, 54);
+        const f = document.createElement('i');
+        f.style.left = x + 'px';
+        f.style.width = w + 'px';
+        f.style.height = h + 'px';
+        f.style.background = 'linear-gradient(180deg,' + color + ',' + color + 'cc)';
+        c.appendChild(f);
+        maxX = x + w; x += w - 3;
+      }
+      c.style.width = maxX + 'px';
+      layer.appendChild(c);
+    }
+  })();
+
+  /* ===== 깊이 효과: 내려갈수록 햇살은 사라지고 바닥이 드러남 ===== */
+  (function depthFx(){
+    const rays = document.getElementById('waterLight');
+    const bed = document.getElementById('seabed');
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      if (rays) rays.style.opacity = (1 - p * 0.92).toFixed(3);
+      if (bed) bed.style.opacity = Math.min(1, Math.max(0, (p - 0.5) / 0.45)).toFixed(3);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  /* ===== 히어로 해양생물 (SVG) ===== */
+  (function heroCreatures(){
+    const wrap = document.getElementById('heroCreatures');
+    if (!wrap) return;
+    ['turtle','fish','puffer','octopus'].forEach((t, i) => {
+      const span = document.createElement('span');
+      span.innerHTML = CREATURE[t]();
+      span.style.animationDelay = (i * 0.4) + 's';
+      wrap.appendChild(span);
     });
   })();
 
@@ -1081,7 +1471,7 @@
     const box = document.getElementById('lightbox');
     const boxImg = document.getElementById('lightboxImg');
     const close = document.getElementById('lightboxClose');
-    document.querySelectorAll('.gallery img, .review-shots img').forEach(img => {
+    document.querySelectorAll('.gallery img').forEach(img => {
       img.addEventListener('click', () => {
         boxImg.src = img.src;
         box.classList.add('open');
