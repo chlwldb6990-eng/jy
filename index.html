@@ -4,6 +4,45 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>헐크쌤 최지유 | 부산 화명동 돌핀어린이수영장</title>
+<meta name="description" content="부산 화명동 돌핀어린이수영장 헐크쌤 최지유 — 수상구조사 1급·해양재난구조대원이 직접 지도하는 어린이 수영·생존수영. 단체·개인레슨·성인 소그룹, 구포·만덕·화명 차량 운행. 1회 무료체험 신청." />
+<meta name="author" content="헐크쌤 최지유" />
+<link rel="icon" type="image/png" href="favicon.png" />
+<link rel="apple-touch-icon" href="favicon.png" />
+
+<!-- 카카오톡 · SNS 공유 미리보기 (Open Graph) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="돌핀어린이수영장 · 헐크쌤 최지유" />
+<meta property="og:title" content="헐크쌤 최지유 | 부산 화명동 돌핀어린이수영장" />
+<meta property="og:description" content="수상구조사 1급·해양재난구조대원이 직접 지도하는 어린이 수영·생존수영. 안전을 최우선으로, 1회 무료체험 신청하세요!" />
+<meta property="og:image" content="og-image.jpg" />
+<meta property="og:locale" content="ko_KR" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="헐크쌤 최지유 | 부산 화명동 돌핀어린이수영장" />
+<meta name="twitter:description" content="수상구조사 1급 전문가가 지도하는 어린이 수영·생존수영. 1회 무료체험." />
+<meta name="twitter:image" content="og-image.jpg" />
+
+<!-- 지역 비즈니스 구조화 데이터 (검색 노출) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SportsActivityLocation",
+  "name": "돌핀어린이수영장 (헐크쌤 최지유)",
+  "image": "og-image.jpg",
+  "telephone": "+82-10-8763-2465",
+  "description": "수상구조사 1급·해양재난구조대원이 지도하는 어린이 수영·생존수영, 단체·개인레슨·성인 소그룹.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "금곡대로 222 동원아쿠아 2층",
+    "addressLocality": "부산광역시 북구",
+    "addressRegion": "부산",
+    "addressCountry": "KR"
+  },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "15:00", "closes": "21:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Saturday","Sunday"], "opens": "09:00", "closes": "13:00" }
+  ]
+}
+</script>
 <style>
   /* ===== 기본 설정 ===== */
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -789,6 +828,22 @@
   .visit-card .vt { font-weight:800; margin-top:6px; color:#fff; font-size:15.5px; }
   .visit-card .vd { font-size:13.5px; color:var(--light); margin-top:5px; line-height:1.6; }
 
+  /* ===== 모바일 하단 고정 전화·카톡 바 ===== */
+  .mobile-bar { position: fixed; left:0; right:0; bottom:0; z-index:30; display:none; box-shadow:0 -4px 18px rgba(1,42,73,.3); }
+  .mobile-bar a {
+    flex:1; display:flex; align-items:center; justify-content:center; gap:7px;
+    height:58px; font-size:16px; font-weight:800; text-decoration:none; color:#fff;
+  }
+  .mobile-bar .mb-call { background:linear-gradient(135deg,var(--sun),var(--coral)); }
+  .mobile-bar .mb-kakao { background:#FEE500; color:#3c1e1e; }
+  @media(max-width:760px){
+    .mobile-bar { display:flex; }
+    body { padding-bottom:58px; }
+    .float-consult { display:none; }
+    .floating-logos { display:none; }
+    .to-top { bottom:72px; }
+  }
+
   /* 등장 애니메이션 */
   .reveal { opacity:0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
   .reveal.show { opacity:1; transform:none; }
@@ -814,6 +869,12 @@
 
   <!-- 맨 위로 버튼 -->
   <button class="to-top" id="toTop" aria-label="맨 위로 이동">↑</button>
+
+  <!-- 모바일 하단 고정 전화·카톡 바 -->
+  <div class="mobile-bar">
+    <a class="mb-call" href="tel:010-8763-2465">📞 전화 상담</a>
+    <a class="mb-kakao" href="#kakao">💬 카톡 상담</a>
+  </div>
 
   <div class="content">
 
@@ -1041,6 +1102,28 @@
             <div><b>현장 경험 풍부</b><span>지역 학교·유치원에서 다년간 진행해 온 검증된 프로그램이에요.</span></div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- 4-2. 성인 수영 -->
+    <section id="adult">
+      <div class="wrap panel reveal">
+        <h2 class="title">성인 수영</h2>
+        <p class="subtitle">어른도 늦지 않았어요 — 물이 무서워도 괜찮습니다</p>
+        <p class="survival-desc">
+          물에 대한 두려움이나 트라우마가 있어도 괜찮아요. <b>수상구조사 전문가</b>가 한 분 한 분 속도에 맞춰,
+          윽박지르지 않고 천천히 물과 친해지도록 함께합니다. 건강·체력 관리부터 4영법 완성까지 즐겁게 배웁니다.
+        </p>
+        <div class="points">
+          <div class="point"><span class="check">🌊</span><div><b>물 공포 · 트라우마 극복</b><span>두려움이 큰 분일수록 더 집중해서, 편안해질 때까지 함께해요.</span></div></div>
+          <div class="point"><span class="check">👥</span><div><b>최대 1:6 소그룹 · 개인레슨</b><span>소수 정예로 프라이빗하게, 또는 1:1로 집중 지도받아요.</span></div></div>
+          <div class="point"><span class="check">💪</span><div><b>건강 · 체력 · 자세 교정</b><span>전신 운동인 수영으로 체력과 컨디션을 함께 챙겨요.</span></div></div>
+          <div class="point"><span class="check">🏊</span><div><b>기초부터 4영법까지</b><span>처음이어도, 다시 배우는 거여도 단계별로 차근차근.</span></div></div>
+        </div>
+        <p style="text-align:center; margin-top:26px; color:#2c5067; font-size:15.5px;">
+          성인 소그룹 <b>주 2회 월 12만원 · 주 3회 월 18만원</b> · 개인레슨 <b>회당 5만원</b><br />
+          자세한 상담은 헐크쌤 <b>010-9137-6990</b>으로 연락 주세요.
+        </p>
       </div>
     </section>
 
@@ -1377,6 +1460,13 @@
             loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
         <a class="map-link" href="https://map.naver.com/p/search/%EB%B6%80%EC%82%B0%20%EB%B6%81%EA%B5%AC%20%EA%B8%88%EA%B3%A1%EB%8C%80%EB%A1%9C%20222%20%EB%8F%99%EC%9B%90%EC%95%84%EC%BF%A0%EC%95%84" target="_blank" rel="noopener">🗺️ 네이버 지도에서 길찾기</a>
+
+        <!-- 소식 · 후기 (외부) -->
+        <div class="contact-actions" style="margin-top:20px;">
+          <a class="map-link" style="margin-top:0; background:#03c75a;" href="https://map.naver.com/p/search/%EB%B6%80%EC%82%B0%20%EB%B6%81%EA%B5%AC%20%EA%B8%88%EA%B3%A1%EB%8C%80%EB%A1%9C%20222%20%EB%8F%99%EC%9B%90%EC%95%84%EC%BF%A0%EC%95%84" target="_blank" rel="noopener">⭐ 네이버 후기 보기</a>
+          <a class="map-link" style="margin-top:0; background:#03c75a;" href="https://m.blog.naver.com/jiyu6990" target="_blank" rel="noopener">📝 네이버 블로그</a>
+          <a class="map-link" style="margin-top:0; background:linear-gradient(135deg,#feda75,#d62976 45%,#962fbf 78%,#4f5bd5);" href="https://www.instagram.com/babyhulk_u" target="_blank" rel="noopener">📷 인스타그램</a>
+        </div>
 
         <p class="copy">© 2026 돌핀어린이수영장 · 헐크쌤 최지유 · 부산 북구 금곡대로 222 동원아쿠아 2층</p>
       </div>
